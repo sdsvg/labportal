@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Документация API лабораторного портала</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 1200px; margin: auto; line-height: 1.6; }
+    h1, h2, h3 { color: #003366; }
+    code, pre { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+    table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; vertical-align: top; }
+    th { background-color: #f0f0f0; text-align: left; }
+    .method { font-weight: bold; color: #007700; }
+    .endpoint { font-family: monospace; color: #444; }
+    .block { border: 1px solid #ccc; padding: 15px; background: #fafafa; border-left: 5px solid #0074D9; margin-bottom: 30px; }
+    .codeblock { background: #eee; padding: 10px; border-radius: 5px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+
+<h1>Документация внешнего API лабораторного портала</h1>
+
+<h2>0. Авторизация клиента по OAuth 2.0</h2>
+<div class="block">
+  <div class="method">POST</div> <div class="endpoint">/api/auth/token</div>
+
+  <h3>Заголовки</h3>
+  <pre class="codeblock">Content-Type: application/x-www-form-urlencoded
+Accept: application/json</pre>
+
+  <h3>Form-параметры</h3>
+  <table>
+    <tr><th>Параметр</th><th>Описание</th></tr>
+    <tr><td>grant_type</td><td>Всегда <code>client_credentials</code></td></tr>
+    <tr><td>scope</td><td>Всегда <code>clinic</code></td></tr>
+    <tr><td>client_secret</td><td>Секрет клиники</td></tr>
+    <tr><td>client_id</td><td>ID клиента (опционально)</td></tr>
+  </table>
+
+  <h3>Пример запроса</h3>
+  <pre class="codeblock">POST /api/auth/token HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+grant_type=client_credentials&scope=clinic&client_secret=YOUR_SECRET</pre>
+
+  <h3>Пример ответа (200 OK)</h3>
+  <pre class="codeblock">{
+  "access_token": "eyJ...",  
+  "token_type": "Bearer",
+  "expires_in": 86400,
+  "scope": "clinic"
+}</pre>
+
+  <h3>Ошибки (4xx)</h3>
+  <pre class="codeblock">{
+  "error": "invalid_client",
+  "error_description": "client authentication failed"
+}</pre>
+
+  <h3>Коды ответа</h3>
+  <table>
+    <tr><th>Код</th><th>Описание</th></tr>
+    <tr><td>200 OK</td><td>Токен выдан</td></tr>
+    <tr><td>400 Bad Request</td><td>Ошибка в параметрах</td></tr>
+    <tr><td>401 Unauthorized</td><td>Неверный client_id/client_secret</td></tr>
+    <tr><td>403 Forbidden</td><td>Неверный scope</td></tr>
+  </table>
+</div>
+
+<h2>1. Получение справочника услуг</h2>
+<div class="block">
+  <div class="method">GET</div> <div class="endpoint">/api/services</div>
+
+  <h3>Query-параметры</h3>
+  <table>
+    <tr><th>Параметр</th><th>Тип</th><th>Описание</th></tr>
+    <tr><td>partNumber</td><td>integer</td><td>Номер страницы</td></tr>
+    <tr><td>partSize</td><td>integer</td><td>Размер страницы</td></tr>
+  </table>
+
+  <h3>Пример запроса</h3>
+  <pre class="codeblock">GET /api/services?partNumber=1&amp;partSize=50 HTTP/1.1
+Authorization: Bearer &lt;token&gt;
+Accept: application/json</pre>
+
+  <h3>Пример ответа (200 OK)</h3>
+  <pre class="codeblock">[
+  {
+    "svcId": 12345,
+    "svcCode": "13.03.210",
+    "svcName": "Исследование А",
+    "parentSvcId": 100,
+    "isGroup": 0,
+    "compType": 0,
+    "description": "Описание услуги",
+    "officialCode": "OFF123",
+    "officialName": "Минздрав. Услуга А",
+    "biomaterials": [
+      { "bioId": 10, "bioName": "Кровь венозная" },
+      { "bioId": 20, "bioName": "Кровь капиллярная" }
+    ]
+  }
+]</pre>
+
+  <h3>Коды ответа</h3>
+  <table>
+    <tr><th>Код</th><th>Описание</th></tr>
+    <tr><td>200 OK</td><td>Успешно</td></tr>
+    <tr><td>400 Bad Request</td><td>Неверные параметры</td></tr>
+    <tr><td>401 Unauthorized</td><td>Токен отсутствует или просрочен</td></tr>
+    <tr><td>403 Forbidden</td><td>Недостаточно прав</td></tr>
+    <tr><td>500 Internal Server Error</td><td>Ошибка сервера</td></tr>
+  </table>
+</div>
+
+<h2>2. Создание предварительной заявки</h2>
+<div class="block">
+  <div class="method">POST</div> <div class="endpoint">/api/orders</div>
+
+  <h3>Заголовки</h3>
+  <pre class="codeblock">Authorization: Bearer &lt;token&gt;
+Content-Type: application/json
+Accept: application/json</pre>
+
+  <h3>Тело запроса (JSON)</h3>
+  <pre class="codeblock">{
+  "orderInfo": {
+    "misOrderId": "CLINICORDER12345",
+    "cito": 0,
+    "doctor": "Иванов И.И."
+  },
+  "patientInfo": {
+    "misPatientId": "54321012345",
+    "lastName": "Иванов",
+    "firstName": "Иван",
+    "midName": "Иванович",
+    "pol": 1,
+    "bDate": "1946-10-14"
+  },
+  "services": [
+    { "svcId": 12345, "bioId": 10 }
+  ]
+}</pre>
+
+  <h3>Пример ответа (200 OK)</h3>
+  <pre class="codeblock">{
+  "orderId": "789012345",
+  "misOrderId": "CLINICORDER12345",
+  "misPatientId": "54321012345",
+  "medicalInfo": [
+    {
+      "paramId": 111,
+      "paramName": "Глюкоза",
+      "paramFullName": "Глюкоза крови",
+      "paramType": 1,
+      "required": 2
+    }
+  ]
+}</pre>
+</div>
+
+<h2>3. Отмена заявки</h2>
+<div class="block">
+  <div class="method">DELETE</div> <div class="endpoint">/api/orders/{orderId}</div>
+
+  <h3>Query-параметры</h3>
+  <pre class="codeblock">orderId (integer) — ID заказа</pre>
+
+  <h3>Пример ответа (200 OK)</h3>
+  <pre class="codeblock">{
+  "status": "OK",
+  "orderId": "789012345"
+}</pre>
+
+  <h3>Коды ответа</h3>
+  <table>
+    <tr><th>Код</th><th>Описание</th></tr>
+    <tr><td>200 OK</td><td>Успешно отменён</td></tr>
+    <tr><td>404 Not Found</td><td>Заказ не найден</td></tr>
+    <tr><td>409 Conflict</td><td>Нельзя отменить</td></tr>
+    <tr><td>401 Unauthorized</td><td>Ошибка авторизации</td></tr>
+  </table>
+</div>
+
+<h2>4. Подтверждение заказа</h2>
+<div class="block">
+  <div class="method">POST</div> <div class="endpoint">/api/orders/{orderId}/confirm</div>
+
+  <h3>Query-параметры</h3>
+  <pre class="codeblock">orderId (integer) — ID заказа</pre>
+
+  <h3>Тело запроса</h3>
+  <pre class="codeblock">{
+  "medicalInfo": {
+    "medicalItems": [
+      {
+        "paramId": 111,
+        "paramValue": "5.6",
+        "svcId": 12345,
+        "bioId": 10
+      }
+    ]
+  }
+}</pre>
+
+  <h3>Пример ответа (200 OK)</h3>
+  <pre class="codeblock">{
+  "status": "OK",
+  "containers": [
+    {
+      "svcId": 123,
+      "bioId": 10,
+      "labNumber": "456510001",
+      "shortNumber": "001",
+      "labelText": "456510001001",
+      "contName": "Пробирка",
+      "contColor": 356541,
+      "contVolume": 5.0,
+      "contCount": 1,
+      "description": "Венозная кровь — взять",
+      "printData": "1234567890%^%$"
+    }
+  ]
+}</pre>
+</div>
+
+<h2>5. Проверка статусов заказов</h2>
+<div class="block">
+  <div class="method">GET</div> <div class="endpoint">/api/orders</div>
+
+  <h3>Query-параметры</h3>
+  <table>
+    <tr><th>Параметр</th><th>Тип</th><th>Описание</th></tr>
+    <tr><td>fromDateTime</td><td>string (ISO 8601)</td><td>Метка времени последней синхронизации</td></tr>
+    <tr><td>status</td><td>integer</td><td>Фильтр по статусу заказа</td></tr>
+    <tr><td>orderId</td><td>integer</td><td>Фильтр по ID заказа</td></tr>
+  </table>
+
+  <h3>Пример ответа (200 OK)</h3>
+  <pre class="codeblock">{
+  "orders": [
+    {
+      "orderId": "78901234",
+      "misOrderId": "CLINICORDER12345",
+      "results": [
+        { "resultId": "10000001", "status": 20, "error": "" },
+        { "resultId": "10000002", "status": 21, "error": "" },
+        { "resultId": "10000003", "status": 22, "error": "Ошибка при разборе файла результатов" }
+      ]
+    }
+  ]
+}</pre>
+</div>
+</div>
+
+<h2>6. Получение результатов заказа</h2>
+<div class="block">
+  <div class="method">GET</div> <div class="endpoint">/api/orders/{orderId}/results/{resultId}</div>
+
+  <h3>Пример ответа (200 OK)</h3>
+  <pre class="codeblock">{
+  "orderId": "789012345",
+  "misOrderId": "CLINICORDER12345",
+  "resultId": "10000001",
+  "paramGroups": [
+    {
+      "groupId": "1",
+      "groupName": "Общий анализ",
+      "parameters": [
+        {
+          "paramId": "101",
+          "paramName": "Гемоглобин",
+          "paramType": "1",
+          "paramValue": "130"
+        }
+      ]
+    }
+  ]
+}</pre>
+</div>
+
+<h2>7. Подтверждение получения результата</h2>
+<div class="block">
+  <div class="method">POST</div> <div class="endpoint">/api/orders/{orderId}/results/{resultId}/ack</div>
+
+  <h3>Заголовки</h3>
+  <pre class="codeblock">Authorization: Bearer &lt;token&gt;
+Accept: application/json</pre>
+
+  <h3>Тело запроса</h3>
+  <pre class="codeblock">{}</pre>
+
+  <h3>Коды ответа</h3>
+  <table>
+    <tr><th>Код</th><th>Описание</th></tr>
+    <tr><td>204 No Content</td><td>Подтверждение принято</td></tr>
+    <tr><td>200 OK</td><td>Подтверждение принято</td></tr>
+    <tr><td>400 Bad Request</td><td>Неверный orderId или resultId</td></tr>
+    <tr><td>401 Unauthorized</td><td>Ошибка авторизации</td></tr>
+    <tr><td>404 Not Found</td><td>Не найдено</td></tr>
+    <tr><td>500 Internal Server Error</td><td>Ошибка сервера</td></tr>
+  </table>
+</div>
+
+</body>
+</html>
