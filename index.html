@@ -139,7 +139,7 @@ Accept: application/json</pre>
     <tr><th>Код</th><th>Описание</th></tr>
     <tr><td>400 Bad Request</td><td>Неверные параметры partNumber/partSize</td></tr>
     <tr><td>401 Unauthorized</td><td>Токен отсутствует или просрочен</td></tr>
-    <tr><td>403 Forbidden</td><td>Недостаточно прав (scope=clinic)</td></tr>
+    <tr><td>403 Forbidden</td><td>Недостаточно прав</td></tr>
     <tr><td>500 Internal Server Error</td><td>Внутренняя ошибка сервера</td></tr>
   </table>
 </div>
@@ -219,7 +219,7 @@ Accept: application/json</pre>
     <tr><th>Код</th><th>Описание</th></tr>
     <tr><td>400 Bad Request</td><td>Неверный формат запроса</td></tr>
     <tr><td>401 Unauthorized</td><td>Ошибка авторизации</td></tr>
-    <tr><td>403 Forbidden</td><td>Нет scope=clinic</td></tr>
+    <tr><td>403 Forbidden</td><td>Недостаточно прав</td></tr>
     <tr><td>500 Internal Server Error</td><td>Ошибка сервера</td></tr>
   </table>
 </div>
@@ -281,8 +281,8 @@ Accept: application/json</pre>
     <tr><th>Код</th><th>Описание</th></tr>
     <tr><td>400 Bad Request</td><td>Неверные параметры тела</td></tr>
     <tr><td>401 Unauthorized</td><td>Ошибка авторизации</td></tr>
-    <tr><td>404 Not Found</td><td>Заказ не найден при SELECT</td></tr>
-    <tr><td>500 Internal Server Error</td><td>Ошибка сервера при CF_PARAMSINFO_UPDATE</td></tr>
+    <tr><td>404 Not Found</td><td>Заказ не найден</td></tr>
+    <tr><td>500 Internal Server Error</td><td>Ошибка сервера</td></tr>
   </table>
 </div>
 
@@ -384,7 +384,7 @@ Accept: application/json</pre>
     <tr><th>Код</th><th>Описание</th></tr>
     <tr><td>400 Bad Request</td><td>Неверные orderId или resultId</td></tr>
     <tr><td>401 Unauthorized</td><td>Ошибка авторизации</td></tr>
-    <tr><td>404 Not Found</td><td>Результат не найден</td></tr>
+        <tr><td>404 Not Found</td><td>Заказ или результат не найден</td></tr>
     <tr><td>500 Internal Server Error</td><td>Ошибка сервера</td></tr>
   </table>
 </div>
@@ -410,7 +410,7 @@ Accept: application/json
     <tr><td>400 Bad Request</td><td>Неверные параметры</td></tr>
     <tr><td>401 Unauthorized</td><td>Ошибка авторизации</td></tr>
     <tr><td>404 Not Found</td><td>Заказ или результат не найден</td></tr>
-    <tr><td>500 Internal Server Error</td><td>Ошибка сервера при обновлении статуса</td></tr>
+    <tr><td>500 Internal Server Error</td><td>Ошибка сервера</td></tr>
   </table>
 </div>
 
