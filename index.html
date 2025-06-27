@@ -66,6 +66,11 @@ grant_type=client_credentials&amp;scope=clinic&amp;client_secret=YOUR_KEY&amp;cl
     <tr><td>403 Forbidden</td><td>Недопустимый scope</td></tr>
   </table>
 
+  <h3>Ошибки</h3>
+  <pre class="codeblock">{
+  "error": "invalid_client",
+  "error_description": "неправильный client_id или client_secret"
+  }</pre>
   <h3>Возможные значения поля <code>error</code></h3>
   <ul>
     <li><code>invalid_request</code></li>
@@ -154,7 +159,9 @@ Accept: application/json</pre>
   "orderInfo": {
     "misOrderId": "CLINICORDER12345",
     "cito": 0,
-    "doctor": "Иванов И.И."
+    "lpuCode": "FILIALCODE987",
+    "doctor": "Иванов И.И.",
+    "comment": "комментарий"
   },
   "patientInfo": {
     "misPatientId": "54321012345",
@@ -174,8 +181,10 @@ Accept: application/json</pre>
     <tr><th>Параметр</th><th>Тип</th><th>Описание</th></tr>
     <tr><td>orderInfo.misOrderId</td><td>string</td><td>ID заказа из клиники (опционально)</td></tr>
     <tr><td>orderInfo.cito</td><td>integer</td><td>Срочность (0 или 1)</td></tr>
+    <tr><td>orderInfo.lpuCode</td><td>string</td><td>Код медучреждения</td></tr>
     <tr><td>orderInfo.doctor</td><td>string</td><td>ФИО врача (опционально)</td></tr>
-    <tr><td>patientInfo.misPatientId</td><td>string</td><td>ID пациента в МИС</td></tr>
+    <tr><td>orderInfo.comment</td><td>string</td><td>Комментарий к заказу</td></tr>
+    <tr><td>patientInfo.patientId</td><td>string</td><td>ID пациента</td></tr>
     <tr><td>patientInfo.lastName</td><td>string</td><td>Фамилия</td></tr>
     <tr><td>patientInfo.firstName</td><td>string</td><td>Имя</td></tr>
     <tr><td>patientInfo.midName</td><td>string</td><td>Отчество</td></tr>
@@ -187,9 +196,9 @@ Accept: application/json</pre>
 
   <h3>Пример ответа (200 OK)</h3>
   <pre class="codeblock">{
-  "orderId": "789012345",
+  "orderId": "M8ZtXJpW",
   "misOrderId": "CLINICORDER12345",
-  "misPatientId": "54321012345",
+  "patientId": "54321012345",
   "medicalInfo": [
     { "paramId": 111, "paramName": "Глюкоза", "paramFullName": "Глюкоза крови", "paramType": 1, "required": 2 }
   ]
@@ -198,9 +207,9 @@ Accept: application/json</pre>
   <h3>Параметры ответа</h3>
   <table>
     <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
-    <tr><td>orderId</td><td>int64</td><td>ID заказа в ЛП</td></tr>
-    <tr><td>misOrderId</td><td>string</td><td>...</td></tr>
-    <tr><td>misPatientId</td><td>string</td><td>...</td></tr>
+    <tr><td>orderId</td><td>string</td><td>ID заказа на ЛП</td></tr>
+    <tr><td>misOrderId</td><td>string</td>ID заказа в МИС<td></td></tr>
+    <tr><td>patientId</td><td>string</td><td>ID пациента на ЛП</td></tr>
     <tr><td>medicalInfo</td><td>array</td><td>Список параметров преаналитики</td></tr>
   </table>
 
@@ -229,11 +238,30 @@ Accept: application/json</pre>
 <div class="block">
   <div class="method">DELETE</div> <div class="endpoint">/api/orders/{orderId}</div>
 
+  <h3>Пример запроса</h3>
+  <pre class="codeblock">DELETE /api/orders/M8ZtXJpW HTTP/1.1
+  Authorization: Bearer &lt;access_token&gt;
+  Accept: application/json</pre>
+
+  <h3>Параметры запроса</h3>
+  <table>
+    <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+    <tr><td>orderId</td><td>string</td><td>ID заказа</td></tr>
+  </table>
+
   <h3>Пример ответа (200 OK)</h3>
   <pre class="codeblock">{
   "status": "OK",
-  "orderId": "789012345"
+  "orderId": "M8ZtXJpW"
 }</pre>
+
+  <h3>Параметры ответа</h3>
+  <table>
+    <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+    <tr><td>status</td><td>string</td><td>Статус операции</td></tr>
+    <tr><td>orderId</td><td>string</td><td>ID заказа</td></tr>
+  </table>
+  </div>
 
   <h3>Коды ошибок</h3>
   <table>
@@ -268,13 +296,48 @@ Accept: application/json</pre>
     <tr><td>bioId</td><td>int64</td><td>ID биоматериала (опционально)</td></tr>
   </table>
 
-  <h3>Пример ответа (200 OK)</h3>
+  <h3>Пример ответа (200 OK)</h3>
   <pre class="codeblock">{
   "status": "OK",
   "containers": [
-    { "svcId": 123, "bioId": 10, "labNumber": "456510001", "shortNumber": "001", "labelText": "456510001001", "contName": "Пробирка", "contColor": 356541, "contVolume": 5.0, "contCount": 1, "description": "Венозная кровь — взять", "printData": "1234567890%^%$" }
+    {
+      "svcId": 123,
+      "bioId": 10,
+      "labNumber": "456510001",
+      "shortNumber": "001",
+      "labelText": "456510001001",
+      "contName": "Пробирка",
+      "contColor": 356541,
+      "contVolume": 5.0,
+      "contCount": 1,
+      "description": "Венозная кровь — взять",
+      "printData": "1234567890%^%$"
+    }
   ]
 }</pre>
+
+  <h3>Параметры ответа</h3>
+  <table>
+    <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+    <tr><td>status</td><td>string</td><td>Статус операции</td></tr>
+    <tr><td>containers</td><td>array</td><td>Список контейнеров</td></tr>
+  </table>
+  <h4>Объект <code>containers</code></h4>
+  <table>
+    <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+    <tr><td>svcId</td><td>int64</td><td>ID услуги</td></tr>
+    <tr><td>bioId</td><td>int64</td><td>ID биоматериала</td></tr>
+    <tr><td>labNumber</td><td>string</td><td>Номер пробы</td></tr>
+    <tr><td>shortNumber</td><td>string</td><td>Короткий номер</td></tr>
+    <tr><td>labelText</td><td>string</td><td>Дополнительный номер пробы</td></tr>
+    <tr><td>contName</td><td>string</td><td>Название контейнера</td></tr>
+    <tr><td>contColor</td><td>integer</td><td>Цвет контейнера</td></tr>
+    <tr><td>contVolume</td><td>number</td><td>Объем</td></tr>
+    <tr><td>contCount</td><td>integer</td><td>Количество</td></tr>
+    <tr><td>description</td><td>string</td><td>Описание методики</td></tr>
+    <tr><td>printData</td><td>string</td><td>Штрихкод</td></tr>
+  </table>
+</div>
 
   <h3>Коды ошибок</h3>
   <table>
@@ -292,31 +355,64 @@ Accept: application/json</pre>
   <div class="method">GET</div> <div class="endpoint">/api/orders</div>
 
   <h3>Пример запроса</h3>
-  <pre class="codeblock">GET /api/orders?fromDateTime=2025-05-27T09:00:00+03:00&status=20 HTTP/1.1
+  <pre class="codeblock">GET /api/results?orderId={orderId}&fromDateTime={fromDateTime}&toDateTime={toDateTime}&cursor={cursor}&limit={limit} HTTP/1.1
 Authorization: Bearer &lt;token&gt;
 Accept: application/json</pre>
 
   <h3>Параметры запроса</h3>
   <table>
     <tr><th>Параметр</th><th>Тип</th><th>Описание</th></tr>
-    <tr><td>fromDateTime</td><td>string</td><td>ISO 8601 метка времени</td></tr>
+    <tr><td>fromDateTime</td><td>string</td><td>ISO 8601 метка времени от</td></tr>
+    <tr><td>toDateTime</td><td>string</td><td>ISO 8601 метка времени до</td></tr>
     <tr><td>status</td><td>integer</td><td>Статус заказа</td></tr>
-    <tr><td>orderId</td><td>int64</td><td>Фильтр по ID заказа</td></tr>
+    <tr><td>orderId</td><td>string</td><td>Фильтр по ID заказа</td></tr>
+    <tr><td>cursor</td><td>string</td><td>Курсор (идентификатор позиции следующего результата)</td></tr>
   </table>
 
-  <h3>Пример ответа (200 OK)</h3>
+  <h3>Пример ответа (200 OK)</h3>
   <pre class="codeblock">{
   "orders": [
     {
-      "orderId": "78901234",
+      "orderId": "M8ZtXJpW",
       "misOrderId": "CLINICORDER12345",
       "results": [
-        { "resultId": "10000001", "status": 20, "error": "" },
-        { "resultId": "10000002", "status": 21, "error": "" }
+        {
+          "resultId": "10000001",
+          "status": 20,
+          "error": ""
+        },
+        {
+          "resultId": "10000002",
+          "status": 21,
+          "error": ""
+        }
       ]
     }
-  ]
+  ],
+  "nextCursor": "r_20452"
 }</pre>
+
+<h3>Параметры ответа</h3>
+  <table>
+    <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+    <tr><td>orders</td><td>array</td><td>Список заказов</td></tr>
+    <tr><td>nextCursor</td><td>string</td><td>Курсор следующего заказа</td></tr>
+  </table>
+  <h4>Объект <code>orders</code></h4>
+  <table>
+    <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+    <tr><td>orderId</td><td>string</td><td>ID заказа на ЛП</td></tr>
+    <tr><td>misOrderId</td><td>string</td><td>Внутренний ID заказа МИС</td></tr>
+    <tr><td>results</td><td>array</td><td>Список результатов</td></tr>
+  </table>
+  <h4>Объект <code>results</code></h4>
+  <table>
+    <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+    <tr><td>resultId</td><td>string</td><td>ID результата</td></tr>
+    <tr><td>status</td><td>integer</td><td>Статус записи</td></tr>
+    <tr><td>error</td><td>string</td><td>Текст ошибки</td></tr>
+  </table>
+</div>
 
   <h3>Коды ошибок</h3>
   <table>
@@ -356,7 +452,7 @@ Accept: application/json</pre>
   <h3>Параметры ответа</h3>
   <table>
     <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
-    <tr><td>orderId</td><td>int64</td><td>ID заказа</td></tr>
+    <tr><td>orderId</td><td>string</td><td>ID заказа</td></tr>
     <tr><td>misOrderId</td><td>string</td><td>ID заказа из клиники</td></tr>
     <tr><td>resultId</td><td>string</td><td>ID результата</td></tr>
     <tr><td>paramGroups</td><td>array</td><td>Группы параметров</td></tr>
@@ -384,7 +480,7 @@ Accept: application/json</pre>
     <tr><th>Код</th><th>Описание</th></tr>
     <tr><td>400 Bad Request</td><td>Неверные orderId или resultId</td></tr>
     <tr><td>401 Unauthorized</td><td>Ошибка авторизации</td></tr>
-        <tr><td>404 Not Found</td><td>Заказ или результат не найден</td></tr>
+    <tr><td>404 Not Found</td><td>Заказ или результат не найден</td></tr>
     <tr><td>500 Internal Server Error</td><td>Ошибка сервера</td></tr>
   </table>
 </div>
@@ -401,12 +497,10 @@ Accept: application/json
 
 {}</pre>
 
-  <h3>Пример ответа (204 No Content)</h3>
-  <pre class="codeblock"></pre>
-
-  <h3>Коды ошибок</h3>
+  <h3>Коды ответа</h3>
   <table>
     <tr><th>Код</th><th>Описание</th></tr>
+    <tr><td>200 OK</td><td>Подтверждение принято</td></tr>
     <tr><td>400 Bad Request</td><td>Неверные параметры</td></tr>
     <tr><td>401 Unauthorized</td><td>Ошибка авторизации</td></tr>
     <tr><td>404 Not Found</td><td>Заказ или результат не найден</td></tr>
