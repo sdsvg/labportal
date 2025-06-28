@@ -64,7 +64,7 @@ grant_type=client_credentials&amp;scope=clinic&amp;client_secret=YOUR_KEY&amp;cl
 <div class="block">
   <div class="method">GET</div> <div class="endpoint">/api/services</div>
 
-  <pre class="codeblock">GET /api/services?partNumber=1&amp;partSize=100 HTTP/1.1
+  <pre class="codeblock">GET /api/services?partNumber={partNumber}&amp;partSize={partSize} HTTP/1.1
 Authorization: Bearer &lt;access_token&gt;
 Accept: application/json</pre>
 
@@ -125,7 +125,7 @@ Accept: application/json</pre>
 <div class="block">
   <div class="method">POST</div> <div class="endpoint">/api/orders</div>
 
-  <h3>Пример запроса</h3>
+  <h3>Пример тела запроса</h3>
   <pre class="codeblock">{
   "orderInfo": {
     "misOrderId": "CLINICORDER12345",
@@ -201,8 +201,7 @@ Accept: application/json</pre>
 <div class="block">
   <div class="method">DELETE</div> <div class="endpoint">/api/orders/{orderId}</div>
 
-  <h3>Пример запроса</h3>
-  <pre class="codeblock">DELETE /api/orders/M8ZtXJpW HTTP/1.1
+  <pre class="codeblock">DELETE /api/orders/{orderId} HTTP/1.1
   Authorization: Bearer &lt;access_token&gt;
   Accept: application/json</pre>
 
@@ -233,7 +232,7 @@ Accept: application/json</pre>
 <div class="block">
   <div class="method">POST</div> <div class="endpoint">/api/orders/{orderId}/confirm</div>
 
-  <h3>Пример запроса</h3>
+  <h3>Пример тела запроса</h3>
   <pre class="codeblock">{
   "medicalInfo": {
     "medicalItems": [
@@ -302,7 +301,6 @@ Accept: application/json</pre>
 <div class="block">
   <div class="method">GET</div> <div class="endpoint">/api/orders</div>
 
-  <h3>Пример запроса</h3>
   <pre class="codeblock">GET /api/results?orderId={orderId}&fromDateTime={fromDateTime}&toDateTime={toDateTime}&cursor={cursor}&limit={limit} HTTP/1.1
 Authorization: Bearer &lt;token&gt;
 Accept: application/json</pre>
@@ -325,14 +323,10 @@ Accept: application/json</pre>
       "misOrderId": "CLINICORDER12345",
       "results": [
         {
-          "resultId": "10000001",
-          "status": 20,
-          "error": ""
+          "resultId": "10000001", "status": 20, "error": ""
         },
         {
-          "resultId": "10000002",
-          "status": 21,
-          "error": ""
+          "resultId": "10000002", "status": 21, "error": ""
         }
       ]
     }
@@ -369,7 +363,6 @@ Accept: application/json</pre>
 <div class="block">
   <div class="method">GET</div> <div class="endpoint">/api/orders/{orderId}/results/{resultId}</div>
 
-  <h3>Пример запроса</h3>
   <pre class="codeblock">GET /api/orders/{orderId}/results/{resultId} HTTP/1.1
 Authorization: Bearer &lt;token&gt;
 Accept: application/json</pre>
@@ -439,13 +432,6 @@ Accept: application/json
 <!-- SECTION 8 -->
 <h2>Коды ошибок</h2>
 
-  <table>
-    <tr><th>Код</th><th>Описание</th></tr>
-    <tr><td>400 Bad Request</td><td>Некорректные параметры</td></tr>
-    <tr><td>401 Unauthorized</td><td>Неверный client_id или client_secret</td></tr>
-    <tr><td>403 Forbidden</td><td>Недопустимый scope</td></tr>
-  </table>
-
   <h3>Пример ошибки</h3>
   <pre class="codeblock">{
   "error": "invalid_client",
@@ -468,6 +454,83 @@ Accept: application/json
     <tr><td>404 Not Found</td><td>Заказ или результат не найден</td></tr>
     <tr><td>500 Internal Server Error</td><td>Внутренняя ошибка сервера</td></tr>
   </table>
+
+  <table>
+  <tr>
+    <th>Код</th>
+    <th>Ошибка</th>
+    <th>Описание</th>
+  </tr>
+  <tr>
+    <td>200 OK</td>
+    <td>–</td>
+    <td>Запрос успешно выполнен</td>
+  </tr>
+  <tr>
+    <td>400 Bad Request</td>
+    <td>
+      invalid_request<br>
+      unsupported_grant_type<br>
+      missing_parameter<br>
+      invalid_parameter<br>
+      invalid_format
+    </td>
+    <td>
+      Неверные или отсутствующие параметры запроса;<br>
+      неподдерживаемый grant_type;<br>
+      параметр указан в неправильном формате
+    </td>
+  </tr>
+  <tr>
+    <td>401 Unauthorized</td>
+    <td>
+      invalid_client<br>
+      invalid_token<br>
+      token_expired<br>
+      signature_invalid
+    </td>
+    <td>
+      Ошибка авторизации: неверный client_id или client_secret;<br>
+      токен отсутствует, просрочен или недействителен;<br>
+      неверная подпись токена
+    </td>
+  </tr>
+  <tr>
+    <td>403 Forbidden</td>
+    <td>
+      unauthorized_client<br>
+      invalid_scope<br>
+      access_denied
+    </td>
+    <td>
+      Авторизация прошла, но доступ к ресурсу запрещён:<br>
+      клиент не имеет нужных прав (например, нет scope=clinic)
+    </td>
+  </tr>
+  <tr>
+    <td>404 Not Found</td>
+    <td>
+      not_found<br>
+      order_not_found<br>
+      result_not_found
+    </td>
+    <td>
+      Указанный ресурс не найден (например, заказ или результат не существует)
+    </td>
+  </tr>
+  <tr>
+    <td>500 Internal Server Error</td>
+    <td>
+      server_error<br>
+      database_error<br>
+      unexpected_exception
+    </td>
+    <td>
+      Внутренняя ошибка сервера. Возможно, проблема на стороне лабораторного портала
+    </td>
+  </tr>
+</table>
+
 
 </body>
 </html>
