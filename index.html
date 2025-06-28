@@ -25,14 +25,13 @@
 <div class="block">
   <div class="method">POST</div> <div class="endpoint">/api/auth/token</div>
 
-  <h3>Пример запроса</h3>
   <pre class="codeblock">POST /api/auth/token HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
 
 grant_type=client_credentials&amp;scope=clinic&amp;client_secret=YOUR_KEY&amp;client_id=YOUR_ID</pre>
 
-  <h3>Параметры запроса</h3>
+  <h3>Form-параметры</h3>
   <table>
     <tr><th>Параметр</th><th>Тип</th><th>Описание</th></tr>
     <tr><td>grant_type</td><td>string</td><td>Всегда <code>client_credentials</code></td></tr>
@@ -58,27 +57,6 @@ grant_type=client_credentials&amp;scope=clinic&amp;client_secret=YOUR_KEY&amp;cl
     <tr><td>scope</td><td>string</td><td>Выданный scope</td></tr>
   </table>
 
-  <h3>Коды ошибок</h3>
-  <table>
-    <tr><th>Код</th><th>Описание</th></tr>
-    <tr><td>400 Bad Request</td><td>Некорректные параметры</td></tr>
-    <tr><td>401 Unauthorized</td><td>Неверный client_id или client_secret</td></tr>
-    <tr><td>403 Forbidden</td><td>Недопустимый scope</td></tr>
-  </table>
-
-  <h3>Ошибки</h3>
-  <pre class="codeblock">{
-  "error": "invalid_client",
-  "error_description": "неправильный client_id или client_secret"
-  }</pre>
-  <h3>Возможные значения поля <code>error</code></h3>
-  <ul>
-    <li><code>invalid_request</code></li>
-    <li><code>invalid_client</code></li>
-    <li><code>unauthorized_client</code></li>
-    <li><code>unsupported_grant_type</code></li>
-    <li><code>invalid_scope</code></li>
-  </ul>
 </div>
 
 <!-- SECTION 1 -->
@@ -86,12 +64,11 @@ grant_type=client_credentials&amp;scope=clinic&amp;client_secret=YOUR_KEY&amp;cl
 <div class="block">
   <div class="method">GET</div> <div class="endpoint">/api/services</div>
 
-  <h3>Пример запроса</h3>
   <pre class="codeblock">GET /api/services?partNumber=1&amp;partSize=100 HTTP/1.1
 Authorization: Bearer &lt;access_token&gt;
 Accept: application/json</pre>
 
-  <h3>Параметры запроса</h3>
+  <h3>Query-параметры</h3>
   <table>
     <tr><th>Параметр</th><th>Тип</th><th>Описание</th></tr>
     <tr><td>partNumber</td><td>integer</td><td>Номер страницы</td></tr>
@@ -113,8 +90,10 @@ Accept: application/json</pre>
     "biomaterials": [
       { "bioId": 10, "bioName": "Венозная кровь" },
       { "bioId": 20, "bioName": "Капиллярная кровь" }
+      // ... другие бм
     ]
   }
+  // ... другие услуги
 ]</pre>
 
   <h3>Параметры ответа</h3>
@@ -138,16 +117,6 @@ Accept: application/json</pre>
     <tr><td>bioId</td><td>int64</td><td>Идентификатор биоматериала</td></tr>
     <tr><td>bioName</td><td>string</td><td>Название биоматериала</td></tr>
   </table>
-
-  <h3>Коды ошибок</h3>
-  <table>
-    <tr><th>Код</th><th>Описание</th></tr>
-    <tr><td>400 Bad Request</td><td>Неверные параметры partNumber/partSize</td></tr>
-    <tr><td>401 Unauthorized</td><td>Токен отсутствует или просрочен</td></tr>
-    <tr><td>403 Forbidden</td><td>Недостаточно прав</td></tr>
-    <tr><td>500 Internal Server Error</td><td>Внутренняя ошибка сервера</td></tr>
-  </table>
-</div>
 
 <!-- SECTION 2 -->
 <h2>2. Создание предварительной заявки</h2>
@@ -223,14 +192,6 @@ Accept: application/json</pre>
     <tr><td>required</td><td>integer</td><td>Обязательность (1/2)</td></tr>
   </table>
 
-  <h3>Коды ошибок</h3>
-  <table>
-    <tr><th>Код</th><th>Описание</th></tr>
-    <tr><td>400 Bad Request</td><td>Неверный формат запроса</td></tr>
-    <tr><td>401 Unauthorized</td><td>Ошибка авторизации</td></tr>
-    <tr><td>403 Forbidden</td><td>Недостаточно прав</td></tr>
-    <tr><td>500 Internal Server Error</td><td>Ошибка сервера</td></tr>
-  </table>
 </div>
 
 <!-- SECTION 3 -->
@@ -263,13 +224,6 @@ Accept: application/json</pre>
   </table>
   </div>
 
-  <h3>Коды ошибок</h3>
-  <table>
-    <tr><th>Код</th><th>Описание</th></tr>
-    <tr><td>401 Unauthorized</td><td>Ошибка авторизации</td></tr>
-    <tr><td>404 Not Found</td><td>Заказ не найден</td></tr>
-    <tr><td>409 Conflict</td><td>Нельзя отменить заказ</td></tr>
-  </table>
 </div>
 
 <!-- SECTION 4 -->
@@ -339,14 +293,6 @@ Accept: application/json</pre>
   </table>
 </div>
 
-  <h3>Коды ошибок</h3>
-  <table>
-    <tr><th>Код</th><th>Описание</th></tr>
-    <tr><td>400 Bad Request</td><td>Неверные параметры тела</td></tr>
-    <tr><td>401 Unauthorized</td><td>Ошибка авторизации</td></tr>
-    <tr><td>404 Not Found</td><td>Заказ не найден</td></tr>
-    <tr><td>500 Internal Server Error</td><td>Ошибка сервера</td></tr>
-  </table>
 </div>
 
 <!-- SECTION 5 -->
@@ -414,13 +360,6 @@ Accept: application/json</pre>
   </table>
 </div>
 
-  <h3>Коды ошибок</h3>
-  <table>
-    <tr><th>Код</th><th>Описание</th></tr>
-    <tr><td>400 Bad Request</td><td>Неверные параметры</td></tr>
-    <tr><td>401 Unauthorized</td><td>Ошибка авторизации</td></tr>
-    <tr><td>500 Internal Server Error</td><td>Ошибка сервера</td></tr>
-  </table>
 </div>
 
 <!-- SECTION 6 -->
@@ -475,14 +414,6 @@ Accept: application/json</pre>
     <tr><td>paramValue</td><td>string</td><td>Значение</td></tr>
   </table>
 
-  <h3>Коды ошибок</h3>
-  <table>
-    <tr><th>Код</th><th>Описание</th></tr>
-    <tr><td>400 Bad Request</td><td>Неверные orderId или resultId</td></tr>
-    <tr><td>401 Unauthorized</td><td>Ошибка авторизации</td></tr>
-    <tr><td>404 Not Found</td><td>Заказ или результат не найден</td></tr>
-    <tr><td>500 Internal Server Error</td><td>Ошибка сервера</td></tr>
-  </table>
 </div>
 
 <!-- SECTION 7 -->
@@ -490,23 +421,55 @@ Accept: application/json</pre>
 <div class="block">
   <div class="method">POST</div> <div class="endpoint">/api/orders/{orderId}/results/{resultId}/ack</div>
 
-  <h3>Пример запроса</h3>
   <pre class="codeblock">POST /api/orders/{orderId}/results/{resultId}/ack HTTP/1.1
 Authorization: Bearer &lt;token&gt;
 Accept: application/json
 
 {}</pre>
 
-  <h3>Коды ответа</h3>
+  <h3>Ответ</h3>
   <table>
     <tr><th>Код</th><th>Описание</th></tr>
     <tr><td>200 OK</td><td>Подтверждение принято</td></tr>
-    <tr><td>400 Bad Request</td><td>Неверные параметры</td></tr>
-    <tr><td>401 Unauthorized</td><td>Ошибка авторизации</td></tr>
+  </table>
+</div>
+
+<!-- SECTION 8 -->
+<h2>7. Коды ошибок</h2>
+
+  <table>
+    <tr><th>Код</th><th>Описание</th></tr>
+    <tr><td>400 Bad Request</td><td>Некорректные параметры</td></tr>
+    <tr><td>401 Unauthorized</td><td>Неверный client_id или client_secret</td></tr>
+    <tr><td>403 Forbidden</td><td>Недопустимый scope</td></tr>
+  </table>
+
+  <h3>Пример ошибки</h3>
+  <pre class="codeblock">{
+  "error": "invalid_client",
+  "error_description": "неправильный client_id или client_secret"
+}</pre>
+  <h3>Возможные значения поля <code>error</code></h3>
+  <ul>
+    <li><code>invalid_request</code></li>
+    <li><code>invalid_client</code></li>
+    <li><code>unauthorized_client</code></li>
+    <li><code>unsupported_grant_type</code></li>
+    <li><code>invalid_scope</code></li>
+  </ul>
+  <table>
+    <tr><th>Код</th><th>Описание</th></tr>
+    <tr><td>200 OK</td><td>Принято</td></tr>
+    <tr><td>400 Bad Request</td><td>Неверные параметры запроса</td></tr>
+    <tr><td>401 Unauthorized</td><td>Токен отсутствует или просрочен</td></tr>
+    <tr><td>403 Forbidden</td><td>Недостаточно прав</td></tr>
     <tr><td>404 Not Found</td><td>Заказ или результат не найден</td></tr>
-    <tr><td>500 Internal Server Error</td><td>Ошибка сервера</td></tr>
+    <tr><td>500 Internal Server Error</td><td>Внутренняя ошибка сервера</td></tr>
   </table>
 </div>
 
 </body>
 </html>
+
+
+
