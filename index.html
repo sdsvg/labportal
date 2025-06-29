@@ -33,11 +33,11 @@ grant_type=client_credentials&amp;scope=clinic&amp;client_secret=YOUR_KEY&amp;cl
 
   <h3>Form-параметры</h3>
   <table>
-    <tr><th>Параметр</th><th>Тип</th><th>Описание</th></tr>
-    <tr><td>grant_type</td><td>string</td><td>Всегда <code>client_credentials</code></td></tr>
-    <tr><td>scope</td><td>string</td><td>Всегда <code>clinic</code></td></tr>
-    <tr><td>client_secret</td><td>string</td><td>Ключ авторизации клиента</td></tr>
-    <tr><td>client_id</td><td>string</td><td>ID клиента (опционально)</td></tr>
+    <tr><th>Параметр</th><th>Тип</th><th>Описание</th><th>Обязательный</th></tr>
+    <tr><td>grant_type</td><td>string</td><td>Всегда <code>client_credentials</code></td><td>Да</td></tr>
+    <tr><td>scope</td><td>string</td><td>Всегда <code>clinic</code></td><td>Да</td></tr>
+    <tr><td>client_secret</td><td>string</td><td>Ключ авторизации клиента</td><td>Да</td></tr>
+    <tr><td>client_id</td><td>string</td><td>ID клиента (опционально)</td><td>Нет</td></tr>
   </table>
 
   <h3>Пример ответа (200 OK)</h3>
@@ -70,9 +70,9 @@ Accept: application/json</pre>
 
   <h3>Query-параметры</h3>
   <table>
-    <tr><th>Параметр</th><th>Тип</th><th>Описание</th></tr>
-    <tr><td>partNumber</td><td>integer</td><td>Номер страницы</td></tr>
-    <tr><td>partSize</td><td>integer</td><td>Размер страницы</td></tr>
+    <tr><th>Параметр</th><th>Тип</th><th>Описание</th><th>Обязательный</th></tr>
+    <tr><td>partNumber</td><td>integer</td><td>Номер страницы</td><td>нет</td></tr>
+    <tr><td>partSize</td><td>integer</td><td>Размер страницы</td><td>нет</td></tr>
   </table>
 
   <h3>Пример ответа (200 OK)</h3>
@@ -135,7 +135,7 @@ Accept: application/json</pre>
     "comment": "комментарий"
   },
   "patientInfo": {
-    "misPatientId": "54321012345",
+    "patientId": "54321012345",
     "lastName": "Иванов",
     "firstName": "Иван",
     "midName": "Иванович",
@@ -150,20 +150,20 @@ Accept: application/json</pre>
 
   <h3>Параметры запроса</h3>
   <table>
-    <tr><th>Параметр</th><th>Тип</th><th>Описание</th></tr>
-    <tr><td>orderInfo.misOrderId</td><td>string</td><td>ID заказа из клиники (опционально)</td></tr>
-    <tr><td>orderInfo.cito</td><td>integer</td><td>Срочность (0 или 1)</td></tr>
-    <tr><td>orderInfo.lpuCode</td><td>string</td><td>Код медучреждения</td></tr>
-    <tr><td>orderInfo.doctor</td><td>string</td><td>ФИО врача (опционально)</td></tr>
-    <tr><td>orderInfo.comment</td><td>string</td><td>Комментарий к заказу</td></tr>
-    <tr><td>patientInfo.patientId</td><td>string</td><td>ID пациента</td></tr>
-    <tr><td>patientInfo.lastName</td><td>string</td><td>Фамилия</td></tr>
-    <tr><td>patientInfo.firstName</td><td>string</td><td>Имя</td></tr>
-    <tr><td>patientInfo.midName</td><td>string</td><td>Отчество</td></tr>
-    <tr><td>patientInfo.pol</td><td>integer</td><td>Пол (1 — муж, 2 — жен)</td></tr>
-    <tr><td>patientInfo.bDate</td><td>string (дата)</td><td>Дата рождения</td></tr>
-    <tr><td>services[].svcId</td><td>int64</td><td>ID услуги</td></tr>
-    <tr><td>services[].bioId</td><td>int64</td><td>ID биоматериала</td></tr>
+    <tr><th>Параметр</th><th>Тип</th><th>Описание</th><th>Обязательный</th></tr>
+    <tr><td>orderInfo.misOrderId</td><td>string</td><td>ID заказа из клиники</td><td>Нет</td></tr>
+    <tr><td>orderInfo.cito</td><td>boolean</td><td>Срочно</td><td>Да</td></tr>
+    <tr><td>orderInfo.lpuCode</td><td>string</td><td>Код медучреждения</td><td>Нет</td></tr>
+    <tr><td>orderInfo.doctor</td><td>string</td><td>ФИО врача</td><td>Нет</td></tr>
+    <tr><td>orderInfo.comment</td><td>string</td><td>Комментарий к заказу</td><td>Нет</td></tr>
+    <tr><td>patientInfo.patientId</td><td>string</td><td>ID пациента</td><td>Нет</td></tr>
+    <tr><td>patientInfo.lastName</td><td>string</td><td>Фамилия</td><td>Да</td></tr>
+    <tr><td>patientInfo.firstName</td><td>string</td><td>Имя</td><td>Да</td></tr>
+    <tr><td>patientInfo.midName</td><td>string</td><td>Отчество</td><td>Нет</td></tr>
+    <tr><td>patientInfo.pol</td><td>integer</td><td>Пол (1 — муж, 2 — жен)</td><td>Да</td></tr>
+    <tr><td>patientInfo.bDate</td><td>string (дата)</td><td>Дата рождения</td><td>Да</td></tr>
+    <tr><td>services[].svcId</td><td>int64</td><td>ID услуги</td><td>Да</td></tr>
+    <tr><td>services[].bioId</td><td>int64</td><td>ID биоматериала</td><td>Да</td></tr>
   </table>
 
   <h3>Пример ответа (200 OK)</h3>
@@ -244,12 +244,12 @@ Accept: application/json</pre>
 
   <h3>Параметры запроса</h3>
   <table>
-    <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
-    <tr><td>medicalInfo</td><td>array</td><td>Список преаналитических параметров</td></tr>
-    <tr><td>paramId</td><td>int64</td><td>Код параметра</td></tr>
-    <tr><td>paramValue</td><td>string</td><td>Значение параметра</td></tr>
-    <tr><td>svcId</td><td>int64</td><td>ID услуги (опционально)</td></tr>
-    <tr><td>bioId</td><td>int64</td><td>ID биоматериала (опционально)</td></tr>
+  <tr><th>Поле</th><th>Тип</th><th>Описание</th><th>Обязательный</th></tr>
+  <tr><td>medicalInfo</td><td>array</td><td>Список преаналитических параметров</td><td>Да</td></tr>
+  <tr><td>paramId</td><td>int64</td><td>Код параметра</td><td>Да</td></tr>
+  <tr><td>paramValue</td><td>string</td><td>Значение параметра</td><td>Да</td></tr>
+  <tr><td>svcId</td><td>int64</td><td>ID услуги</td><td>Нет</td></tr>
+  <tr><td>bioId</td><td>int64</td><td>ID биоматериала</td><td>Нет</td></tr>
   </table>
 
   <h3>Пример ответа (200 OK)</h3>
@@ -303,19 +303,24 @@ Accept: application/json</pre>
 <div class="block">
   <div class="method">GET</div> <div class="endpoint">/api/orders</div>
 
-  <pre class="codeblock">GET /api/results?orderId={orderId}&fromDateTime={fromDateTime}&toDateTime={toDateTime}&cursor={cursor}&limit={limit} HTTP/1.1
+<pre class="codeblock">GET /api/results?orderId={orderId}&fromDateTime={fromDateTime}&toDateTime={toDateTime}&status={status}&cursor={cursor}&limit={limit} HTTP/1.1
 Authorization: Bearer &lt;token&gt;
 Accept: application/json</pre>
 
   <h3>Параметры запроса</h3>
   <table>
-    <tr><th>Параметр</th><th>Тип</th><th>Описание</th></tr>
-    <tr><td>fromDateTime</td><td>string</td><td>ISO 8601 метка времени от</td></tr>
-    <tr><td>toDateTime</td><td>string</td><td>ISO 8601 метка времени до</td></tr>
-    <tr><td>status</td><td>integer</td><td>Статус заказа</td></tr>
-    <tr><td>orderId</td><td>string</td><td>Фильтр по ID заказа</td></tr>
-    <tr><td>cursor</td><td>string</td><td>Курсор (идентификатор позиции следующего результата)</td></tr>
+    <tr><th>Параметр</th><th>Тип</th><th>Описание</th><th>Обязательный</th></tr>
+    <tr><td>fromDateTime*</td><td>string</td><td>ISO 8601 метка времени «от»</td><td>Нет, но одно из отмеченных * обязательно</td></tr>
+    <tr><td>toDateTime*</td><td>string</td><td>ISO 8601 метка времени «до»</td><td>Нет (только при наличии fromDateTime)</td></tr>
+    <tr><td>status*</td><td>integer</td><td>Статус заказа</td><td>Нет, но одно из отмеченных * обязательно</td></tr>
+    <tr><td>orderId*</td><td>string</td><td>Фильтр по ID заказа</td><td>Нет, но одно из отмеченных * обязательно</td></tr>
+    <tr><td>cursor*</td><td>string</td><td>Курсор (идентификатор позиции следующего результата)</td><td>Нет, но одно из отмеченных * обязательно</td></tr>
+    <tr><td>limit</td><td>integer</td><td>Максимальное количество заказов в ответе</td><td>Нет</td></tr>
   </table>
+
+  <p><strong>Примечание:</strong><br>
+  Все параметры запроса являются необязательными. Однако <strong>обязательно должно быть указано хотя бы одно</strong> из следующих: <code>orderId</code>, <code>fromDateTime</code>, <code>status</code>, <code>cursor</code>.<br>
+  Параметр <code>toDateTime</code> можно передать только при наличии <code>fromDateTime</code>.</p>
 
   <h3>Пример ответа (200 OK)</h3>
   <pre class="codeblock">{
