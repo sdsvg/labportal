@@ -430,19 +430,6 @@ Accept: application/json
 <!-- SECTION 8 -->
 <h2>Коды ошибок</h2>
 
-  <h3>Пример ошибки</h3>
-  <pre class="codeblock">{
-  "error": "invalid_client",
-  "error_description": "неправильный client_id или client_secret"
-}</pre>
-  <h3>Возможные значения поля <code>error</code></h3>
-  <ul>
-    <li><code>invalid_request</code></li>
-    <li><code>invalid_client</code></li>
-    <li><code>unauthorized_client</code></li>
-    <li><code>unsupported_grant_type</code></li>
-    <li><code>invalid_scope</code></li>
-  </ul>
   <table>
     <tr><th>Код</th><th>Описание</th></tr>
     <tr><td>200 OK</td><td>Принято</td></tr>
@@ -453,82 +440,11 @@ Accept: application/json
     <tr><td>500 Internal Server Error</td><td>Внутренняя ошибка сервера</td></tr>
   </table>
 
-  <table>
-  <tr>
-    <th>Код</th>
-    <th>Ошибка</th>
-    <th>Описание</th>
-  </tr>
-  <tr>
-    <td>200 OK</td>
-    <td>–</td>
-    <td>Запрос успешно выполнен</td>
-  </tr>
-  <tr>
-    <td>400 Bad Request</td>
-    <td>
-      invalid_request<br>
-      unsupported_grant_type<br>
-      missing_parameter<br>
-      invalid_parameter<br>
-      invalid_format
-    </td>
-    <td>
-      Неверные или отсутствующие параметры запроса;<br>
-      неподдерживаемый grant_type;<br>
-      параметр указан в неправильном формате
-    </td>
-  </tr>
-  <tr>
-    <td>401 Unauthorized</td>
-    <td>
-      invalid_client<br>
-      invalid_token<br>
-      token_expired<br>
-      signature_invalid
-    </td>
-    <td>
-      Ошибка авторизации: неверный client_id или client_secret;<br>
-      токен отсутствует, просрочен или недействителен;<br>
-      неверная подпись токена
-    </td>
-  </tr>
-  <tr>
-    <td>403 Forbidden</td>
-    <td>
-      unauthorized_client<br>
-      invalid_scope<br>
-      access_denied
-    </td>
-    <td>
-      Авторизация прошла, но доступ к ресурсу запрещён:<br>
-      клиент не имеет нужных прав (например, нет scope=clinic)
-    </td>
-  </tr>
-  <tr>
-    <td>404 Not Found</td>
-    <td>
-      not_found<br>
-      order_not_found<br>
-      result_not_found
-    </td>
-    <td>
-      Указанный ресурс не найден (например, заказ или результат не существует)
-    </td>
-  </tr>
-  <tr>
-    <td>500 Internal Server Error</td>
-    <td>
-      server_error<br>
-      database_error<br>
-      unexpected_exception
-    </td>
-    <td>
-      Внутренняя ошибка сервера. Возможно, проблема на стороне лабораторного портала
-    </td>
-  </tr>
-</table>
-
+  <h3>Пример тела ошибки</h3>
+  <pre class="codeblock">{
+  "error": "invalid_client",
+  "error_description": "неправильный client_id или client_secret"
+}</pre>
 
 </body>
 </html>
