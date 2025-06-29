@@ -144,6 +144,7 @@ Accept: application/json</pre>
   },
   "services": [
     { "svcId": 1234534535, "bioId": 104325435345 }
+    // ... другие услуги
   ]
 }</pre>
 
@@ -172,6 +173,7 @@ Accept: application/json</pre>
   "patientId": "54321012345",
   "medicalInfo": [
     { "paramId": 111, "paramName": "Глюкоза", "paramFullName": "Глюкоза крови", "paramType": 1, "required": 2 }
+    // ... другие преаналитические параметры
   ]
 }</pre>
 
@@ -179,9 +181,9 @@ Accept: application/json</pre>
   <table>
     <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
     <tr><td>orderId</td><td>string</td><td>ID заказа на ЛП</td></tr>
-    <tr><td>misOrderId</td><td>string</td>ID заказа в МИС<td></td></tr>
+    <tr><td>misOrderId</td><td>string</td><td>ID заказа в МИС</td></tr>
     <tr><td>patientId</td><td>string</td><td>ID пациента на ЛП</td></tr>
-    <tr><td>medicalInfo</td><td>array</td><td>Список параметров преаналитики</td></tr>
+    <tr><td>medicalInfo</td><td>array</td><td>Список преаналитических параметров</td></tr>
   </table>
 
   <h4>Массив <code>medicalInfo</code></h4>
@@ -236,6 +238,7 @@ Accept: application/json</pre>
   <pre class="codeblock">{
   "medicalInfo": [
     { "paramId": 111, "paramValue": "5.6", "svcId": 123, "bioId": 10 }
+    // ... другие заполненные параметры
   ] 
 }</pre>
 
@@ -266,6 +269,7 @@ Accept: application/json</pre>
       "description": "Венозная кровь — взять",
       "printData": "1234567890%^%$"
     }
+    // ... другие контейнеры
   ]
 }</pre>
 
@@ -326,8 +330,10 @@ Accept: application/json</pre>
         {
           "resultId": "10000002", "status": 21, "error": ""
         }
+        // ... другие результаты заказа
       ]
     }
+    // ... другие заказы
   ],
   "nextCursor": "r_20452"
 }</pre>
@@ -376,6 +382,7 @@ Accept: application/json</pre>
       "groupName": "Основные",
       "parameters": [
         { "paramId": "101", "paramName": "Гемоглобин", "paramType": "number", "paramValue": "130" }
+        // ... другие параметры
       ]
     }
   ]
