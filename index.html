@@ -129,7 +129,7 @@ Accept: application/json</pre>
   <pre class="codeblock">{
   "orderInfo": {
     "misOrderId": "CLINICORDER12345",
-    "cito": 0,
+    "cito": false,
     "lpuCode": "FILIALCODE987",
     "doctor": "Иванов И.И.",
     "comment": "комментарий"
@@ -303,7 +303,7 @@ Accept: application/json</pre>
 <div class="block">
   <div class="method">GET</div> <div class="endpoint">/api/orders</div>
 
-<pre class="codeblock">GET /api/results?orderId={orderId}&fromDateTime={fromDateTime}&toDateTime={toDateTime}&status={status}&cursor={cursor}&limit={limit} HTTP/1.1
+<pre class="codeblock">GET /api/orders?orderId={orderId}&fromDateTime={fromDateTime}&toDateTime={toDateTime}&status={status}&cursor={cursor}&limit={limit} HTTP/1.1
 Authorization: Bearer &lt;token&gt;
 Accept: application/json</pre>
 
