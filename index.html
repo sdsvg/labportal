@@ -50,7 +50,7 @@
 
 <h1>Документация внешнего API лабораторного портала</h1>
 
-<h2>Введение</h2>
+<h2 class="no-collapse">Введение</h2>
 <p>Интеграция предназначена для обмена данными между медицинскими информационными системами (МИС) сторонних заказчиков и лабораторным порталом (ЛП).</p>
 
 <p>Она позволяет внешним системам автоматизировать взаимодействие с лабораториями, не используя веб-интерфейс лабораторного портала.</p>
@@ -58,13 +58,14 @@
 <p>Интеграция реализована в формате REST API и ориентирована на клиентов, не использующих МИС Инфоклиника, но желающих подключаться к лабораторному порталу через свои системы.</p>
 
 <img src="simple.png" alt="Общий порядок шагов"
-     style="display: block;
-            margin: 20px auto;
-            max-width: 100%;
-            width: 300px;
+     style="float: left;
+            margin: 20px;
+            width: 30%;
             border: 1px solid #ccc;
             padding: 5px;
             background: #fff;">
+
+<div style="clear: both;"></div>
 
 <p><em>Рис. 1. Базовый сценарий размещения заказа</em></p>
 
@@ -545,7 +546,7 @@ Accept: application/json
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const headers = document.querySelectorAll("h2");
+    const headers = document.querySelectorAll("h2:not(.no-collapse)");
 
     headers.forEach((h2) => {
       const wrapper = document.createElement("div");
