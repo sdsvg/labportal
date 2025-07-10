@@ -14,6 +14,31 @@
     .endpoint { font-family: monospace; color: #444; }
     .block { border: 1px solid #ccc; padding: 15px; background: #fafafa; border-left: 5px solid #0074D9; margin-bottom: 30px; }
     .codeblock { background: #eee; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    
+    .collapsible-content {
+    display: none;
+    margin-bottom: 20px;
+  }
+
+  .collapsible-header {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .collapsible-header::before {
+    content: '▶ ';
+    display: inline-block;
+    transform: rotate(0deg);
+    transition: transform 0.2s;
+  }
+
+  .collapsible-header.active::before {
+    content: '▼ ';
+  }
+
+  .collapsible-content.open {
+    display: block;
+  }  
   </style>
 </head>
 <body>
@@ -511,6 +536,37 @@ Accept: application/json
   "error": "invalid_client",
   "error_description": "неправильный client_id или client_secret"
 }</pre>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const headers = document.querySelectorAll("h2");
+
+    headers.forEach((h2) => {
+      const wrapper = document.createElement("div");
+      const content = document.createElement("div");
+
+      wrapper.classList.add("collapsible-section");
+      h2.classList.add("collapsible-header");
+      content.classList.add("collapsible-content");
+
+      let next = h2.nextElementSibling;
+      while (next && next.tagName !== "H2") {
+        const tmp = next.nextElementSibling;
+        content.appendChild(next);
+        next = tmp;
+      }
+
+      h2.parentNode.insertBefore(wrapper, h2);
+      wrapper.appendChild(h2);
+      wrapper.appendChild(content);
+
+      h2.addEventListener("click", () => {
+        h2.classList.toggle("active");
+        content.classList.toggle("open");
+      });
+    });
+  });
+</script>
 
 </body>
 </html>
