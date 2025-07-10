@@ -25,16 +25,21 @@
     user-select: none;
   }
 
-  .collapsible-header::before {
-    content: '▶ ';
-    display: inline-block;
-    transform: rotate(0deg);
-    transition: transform 0.2s;
-  }
+.collapsible-header::before {
+  content: '';
+  display: inline-block;
+  border-style: solid;
+  border-width: 6px 4px 0 4px;
+  border-color: #003366 transparent transparent transparent;
+  margin-right: 8px;
+  vertical-align: middle;
+  transition: transform 0.2s ease;
+  transform: rotate(0deg);
+}
 
-  .collapsible-header.active::before {
-    content: '▼ ';
-  }
+.collapsible-header.active::before {
+  transform: rotate(90deg);
+}
 
   .collapsible-content.open {
     display: block;
@@ -45,14 +50,13 @@
 
 <h1>Документация внешнего API лабораторного портала</h1>
 
-<h2>Введение</h2>
+<h2 class="collapsible-header active">Введение</h2>
 <p>Интеграция предназначена для обмена данными между медицинскими информационными системами (МИС) сторонних заказчиков и лабораторным порталом (ЛП).</p>
 
 <p>Она позволяет внешним системам автоматизировать взаимодействие с лабораториями, не используя веб-интерфейс лабораторного портала.</p>
 
 <p>Интеграция реализована в формате REST API и ориентирована на клиентов, не использующих МИС Инфоклиника, но желающих подключаться к лабораторному порталу через свои системы.</p>
 
-<h2>Сценарий взаимодействия</h2>
 <img src="simple.png" alt="Общий порядок шагов"
      style="float: left;
             margin: 20px;
@@ -63,7 +67,8 @@
 
 <p><em>Рис. 1. Базовый сценарий размещения заказа</em></p>
 
-  
+<h2>Сценарий взаимодействия</h2>
+
 <p><strong>Описание шагов:</strong></p>
 <table>
   <tr><th>Шаг</th><th>Описание</th></tr>
