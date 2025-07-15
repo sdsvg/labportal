@@ -392,21 +392,28 @@ Accept: application/json</pre>
 <pre class="codeblock">GET /api/orders?orderId={orderId}&fromDateTime={fromDateTime}&toDateTime={toDateTime}&status={status}&cursor={cursor}&limit={limit} HTTP/1.1
 Authorization: Bearer &lt;token&gt;
 Accept: application/json</pre>
-
+  
   <h3>Параметры запроса</h3>
   <table>
     <tr><th>Параметр</th><th>Тип</th><th>Описание</th><th>Обязательный</th></tr>
-    <tr><td>fromDateTime*</td><td>string (дата в ISO 8601)</td><td>Метка времени «от»</td><td>Нет, но одно из отмеченных * обязательно</td></tr>
-    <tr><td>toDateTime</td><td>string (дата в ISO 8601)</td><td>Метка времени «до»</td><td>Нет (возможно только при наличии fromDateTime)</td></tr>
-    <tr><td>status*</td><td>integer</td><td>Статус заказа</td><td>Нет, но одно из отмеченных * обязательно</td></tr>
-    <tr><td>orderId*</td><td>string</td><td>Фильтр по ID заказа</td><td>Нет, но одно из отмеченных * обязательно</td></tr>
-    <tr><td>cursor*</td><td>string</td><td>Курсор (идентификатор позиции следующего результата)</td><td>Нет, но одно из отмеченных * обязательно</td></tr>
-    <tr><td>limit</td><td>integer</td><td>Максимальное количество заказов в ответе</td><td>Нет</td></tr>
+    <tr><td>orderId*</td><td>string</td><td>Фильтр по ID заказа</td><td>Нет*</td></tr>
+    <tr><td>fromDateTime*</td><td>string (дата в ISO 8601)</td><td>Дата начала диапазона</td><td>Нет*</td></tr>
+    <tr><td>toDateTime</td><td>string (дата в ISO 8601)</td><td>Дата конца диапазона</td><td>Нет</td></tr>
+    <tr><td>status</td><td>integer</td><td>Статус заказа (по умолчанию = 3)</td><td>Нет**</td></tr>
+    <tr><td>cursor</td><td>string</td><td>Курсор для постраничного просмотра (идентификатор позиции следующего результата)</td><td>Нет**</td></tr>
+    <tr><td>limit</td><td>integer</td><td>Максимальное количество заказов в ответе (по умолчанию = 100)</td><td>Нет</td></tr>
   </table>
 
   <p><strong>Примечание:</strong><br>
-  Все параметры запроса являются необязательными. Однако <strong>обязательно должно быть указано хотя бы одно</strong> из следующих: <code>orderId</code>, <code>fromDateTime</code>, <code>status</code>, <code>cursor</code>.<br>
-  Параметр <code>toDateTime</code> можно передать только при наличии <code>fromDateTime</code>.</p>
+    <ul>
+      <li>Обязательно должен быть указан хотя бы один из: <code>orderId</code> или <code>fromDateTime</code>.</li>
+      <li><code>status</code> и <code>cursor</code> можно использовать только при наличии <code>orderId</code> или <code>fromDateTime</code>.</li>
+      <li><code>cursor</code> применяется для постраничного просмотра.</li>
+      <li><code>toDateTime</code> допустим только при наличии <code>fromDateTime</code>.</li>
+      <li><code>limit</code> по умолчанию равен 50.</li>
+      <li><code>status</code> по умолчанию равен 3.</li>
+    </ul>
+  </p>
 
   <h3>Пример ответа (200 OK)</h3>
   <pre class="codeblock">{
