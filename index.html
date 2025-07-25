@@ -399,19 +399,19 @@ Accept: application/json</pre>
     <tr><td>orderId*</td><td>string</td><td>Фильтр по ID заказа</td><td>Нет*</td></tr>
     <tr><td>fromDateTime*</td><td>string (дата в ISO 8601)</td><td>Дата начала диапазона</td><td>Нет*</td></tr>
     <tr><td>toDateTime</td><td>string (дата в ISO 8601)</td><td>Дата конца диапазона</td><td>Нет</td></tr>
-    <tr><td>status</td><td>integer</td><td>Статус заказа (по умолчанию = 3)</td><td>Нет**</td></tr>
+    <tr><td>status</td><td>integer</td><td>Статус заказа</td><td>Нет**</td></tr>
     <tr><td>cursor</td><td>string</td><td>Курсор для постраничного просмотра (идентификатор позиции следующего результата)</td><td>Нет**</td></tr>
-    <tr><td>limit</td><td>integer</td><td>Максимальное количество заказов в ответе (по умолчанию = 100)</td><td>Нет</td></tr>
+    <tr><td>limit</td><td>integer</td><td>Максимальное количество заказов в ответе</td><td>Нет</td></tr>
   </table>
 
   <p><strong>Примечание:</strong><br>
     <ul>
-      <li>Обязательно должен быть указан хотя бы один из: <code>orderId</code> или <code>fromDateTime</code>.</li>
-      <li><code>status</code> и <code>cursor</code> можно использовать только при наличии <code>orderId</code> или <code>fromDateTime</code>.</li>
+      <li>обязательно должен быть указан хотя бы один из: <code>orderId</code> или <code>fromDateTime</code>.</li>
+      <li><code>toDateTime</code> применится только при наличии <code>fromDateTime</code>.</li>
       <li><code>cursor</code> применяется для постраничного просмотра.</li>
-      <li><code>toDateTime</code> допустим только при наличии <code>fromDateTime</code>.</li>
+      <li><code>status</code> и <code>cursor</code> можно использовать только при наличии <code>orderId</code> или <code>fromDateTime</code>.</li>
       <li><code>limit</code> по умолчанию равен 50.</li>
-      <li><code>status</code> по умолчанию равен 3.</li>
+      <li><code>status</code> по умолчанию равен 2.</li>
     </ul>
   </p>
 
@@ -423,10 +423,10 @@ Accept: application/json</pre>
       "misOrderId": "CLINICORDER12345",
       "results": [
         {
-          "resultId": "10000001", "status": 20, "error": ""
+          "resultId": "10000001", "state": 20, "error": ""
         },
         {
-          "resultId": "10000002", "status": 21, "error": ""
+          "resultId": "10000002", "state": 21, "error": ""
         }
         // ... другие результаты заказа
       ]
@@ -453,7 +453,7 @@ Accept: application/json</pre>
   <table>
     <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
     <tr><td>resultId</td><td>string</td><td>ID результата</td></tr>
-    <tr><td>status</td><td>integer</td><td>Статус записи</td></tr>
+    <tr><td>state</td><td>integer</td><td>Состояние элемента заказа</td></tr>
     <tr><td>error</td><td>string</td><td>Текст ошибки</td></tr>
   </table>
 </div>
