@@ -169,7 +169,7 @@ Accept: application/json</pre>
     "svcName": "Исследование А",
     "parentSvcId": 100,
     "isGroup": false,
-    "compType": 0,
+    "isComposite": 0,
     "description": "Описание услуги",
     "officialCode": "OFF123",
     "officialName": "Минздрав. Услуга А",
@@ -189,8 +189,8 @@ Accept: application/json</pre>
     <tr><td>svcCode</td><td>string</td><td>Код услуги</td></tr>
     <tr><td>svcName</td><td>string</td><td>Название услуги</td></tr>
     <tr><td>parentSvcId</td><td>int64|null</td><td>Идентификатор родительской группы</td></tr>
-    <tr><td>isGroup</td><td>boolean</td><td>Флаг раздела</td></tr>
-    <tr><td>compType</td><td>integer</td><td>Тип комплексности</td></tr>
+    <tr><td>isGroup</td><td>boolean</td><td>Флаг Раздел</td></tr>
+    <tr><td>isComposite</td><td>integer</td><td>Флаг Составная услуга</td></tr>
     <tr><td>description</td><td>string</td><td>Описание услуги</td></tr>
     <tr><td>officialCode</td><td>string</td><td>Официальный код</td></tr>
     <tr><td>officialName</td><td>string</td><td>Официальное название</td></tr>
@@ -207,7 +207,7 @@ Accept: application/json</pre>
 </div>
 
 <!-- SECTION 2 -->
-<h2>2. Создание предварительной заявки</h2>
+<h2>2. Создание заказа</h2>
 <div class="block">
   <div class="method">POST</div> <div class="endpoint">/api/orders</div>
 
@@ -238,7 +238,7 @@ Accept: application/json</pre>
   <table>
     <tr><th>Параметр</th><th>Тип</th><th>Описание</th><th>Обязательный</th></tr>
     <tr><td>orderInfo.misOrderId</td><td>string</td><td>ID заказа из клиники</td><td>Нет</td></tr>
-    <tr><td>orderInfo.cito</td><td>boolean</td><td>Срочно</td><td>Да</td></tr>
+    <tr><td>orderInfo.cito</td><td>boolean</td><td>Флаг Срочно</td><td>Да</td></tr>
     <tr><td>orderInfo.lpuCode</td><td>string</td><td>Код медучреждения</td><td>Нет</td></tr>
     <tr><td>orderInfo.doctor</td><td>string</td><td>ФИО врача</td><td>Нет</td></tr>
     <tr><td>orderInfo.comment</td><td>string</td><td>Комментарий к заказу</td><td>Нет</td></tr>
@@ -374,7 +374,7 @@ Accept: application/json</pre>
     <tr><td>shortNumber</td><td>string</td><td>Короткий номер</td></tr>
     <tr><td>labelText</td><td>string</td><td>Дополнительный номер пробы</td></tr>
     <tr><td>contName</td><td>string</td><td>Название контейнера</td></tr>
-    <tr><td>contColor</td><td>integer</td><td>Цвет контейнера</td></tr>
+    <tr><td>contColor</td><td>integer</td><td>Цвет контейнера в RGB (R × 65536 + G × 256 + B)</td></tr>
     <tr><td>contVolume</td><td>number</td><td>Объем</td></tr>
     <tr><td>contCount</td><td>integer</td><td>Количество</td></tr>
     <tr><td>description</td><td>string</td><td>Описание методики</td></tr>
@@ -533,6 +533,50 @@ Accept: application/json
 </div>
 
 <!-- SECTION 8 -->
+<h2>Справочник значений параметров</h2>
+
+<h3>Пол (pol)</h3>
+<table>
+  <tr><th>Значение</th><th>Описание</th></tr>
+  <tr><td>1</td><td>Мужской</td></tr>
+  <tr><td>2</td><td>Женский</td></tr>
+</table>
+
+<h3>Тип услуги (isComposite)</h3>
+<table>
+  <tr><th>Значение</th><th>Описание</th></tr>
+  <tr><td>0</td><td>Обычная услуга</td></tr>
+  <tr><td>1</td><td>Составная услуга</td></tr>
+</table>
+
+<h3>Обязательность параметра (required)</h3>
+<table>
+  <tr><th>Значение</th><th>Описание</th></tr>
+  <tr><td>1</td><td>Необязательное заполнение параметра</td></tr>
+  <tr><td>2</td><td>Обязательное заполнение параметра</td></tr>
+</table>
+
+<h3>Фильтр статуса заказа (status)</h3>
+<table>
+  <tr><th>Значение</th><th>Описание</th></tr>
+  <tr><td>1</td><td>Заявки</td></tr>
+  <tr><td>2</td><td>Последние результаты</td></tr>
+  <tr><td>3</td><td>Полученные ранее результаты</td></tr>
+</table>
+
+<h3>Состояние результата (state)</h3>
+<table>
+  <tr><th>Код</th><th>Описание</th></tr>
+  <tr><td>10</td><td>Неотправленная заявка</td></tr>
+  <tr><td>11</td><td>Отправленная заявка</td></tr>
+  <tr><td>12</td><td>Ошибка при отправке заявки</td></tr>
+  <tr><td>20</td><td>Получен результат</td></tr>
+  <tr><td>21</td><td>Результат обработан</td></tr>
+  <tr><td>22</td><td>Ошибка при обработке результата</td></tr>
+  <tr><td>23</td><td>Результат уже был получен ранее</td></tr>
+</table>
+
+<!-- SECTION 9 -->
 <h2>Коды ошибок</h2>
 
   <table>
